@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header"
+import noData from "./../assets/img/no_data.svg"
 
 export default function Home() {
     const [todos, setTodo] = useState([]);
@@ -133,7 +134,7 @@ export default function Home() {
                             }
                             {todos.length === 0 &&
                                 <div className="text-center mt-10 w-full py-5">
-                                    <img src="../src/assets/img/no_data.svg" alt="no_data" className="w-80 m-auto" />
+                                    <img src={noData} alt="no_data" className="w-80 m-auto" />
                                     <p className="mt-10 text-xl">There is no activity right now.</p>
                                 </div>
                             }
