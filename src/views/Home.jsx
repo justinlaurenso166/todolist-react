@@ -10,11 +10,13 @@ export default function Home() {
     const [data, setData] = useState({ id: 0, activity: "", priority: 0, complete: false });
     const type = useRef("add");
     const editId = useRef(0);
+    const [sort, setSort] = useState("name");
 
     const clearData = () => {
         setActivity("")
         setPriority(0)
         type.current = "add"
+        setSort("name")
     }
 
     const addTodo = (e) => {
@@ -22,7 +24,9 @@ export default function Home() {
         let new_data = { id: todos.length + 1, activity: activity, priority: parseInt(priority), complete: false };
         setData(new_data)
         let copy = [...todos];
-        copy = [...copy, new_data]
+        copy = [...copy, new_data].sort((a,b)=>{
+            return a.activity > b.activity ? 1 : -1
+        })
         setTodo(copy);
         clearData()
     }
@@ -58,6 +62,36 @@ export default function Home() {
         clearData()
     }
 
+    const sortData = ()=>{
+        if(sort === "a_z"){
+            let copy = [...todos].sort((a,b)=>{
+                return a.activity > b.activity ? 1 : -1
+            })
+            setTodo(copy);
+        }
+        else if(sort === "z_a"){
+            let copy = [...todos].sort((a,b)=>{
+                return a.activity < b.activity ? 1 : -1
+            })
+            setTodo(copy);
+        }
+        else if(sort === "l_h"){
+            let copy = [...todos].sort((a,b)=>{
+                return a.priority > b.priority ? 1 : -1
+            })
+            setTodo(copy);
+        }
+        else if(sort === "h_l"){
+            let copy = [...todos].sort((a,b)=>{
+                return a.priority < b.priority ? 1 : -1
+            })
+            setTodo(copy);
+        }
+    }
+
+    useEffect(()=>{
+        sortData();
+    },[sort])
 
 
     return (
@@ -72,7 +106,7 @@ export default function Home() {
                                     <input type="text" name="todo" id="todo" placeholder="Input your activity" className="w-full py-2 px-3 border-2 border-gray-400 rounded-lg" value={activity} onChange={(event) => { setActivity(event.target.value) }} required />
                                 </div>
                                 <div className="flex-0 w-48">
-                                    <input type={"submit"} className="w-full bg-blue-500 hover:bg-blue-600 hover:cursor-pointer py-2 px-3 rounded-lg text-white" value={type.current === "add" ? "Enter" : "Save Changes"} />
+                                    <input type={"submit"} className="w-full bg-blue-500 hover:bg-blue-600 hover:cursor-pointer py-2 px-3 rounded-lg text-white" value={type.current === "add" ? "Create" : "Save Changes"} />
                                 </div>
                             </div>
                             <div className="flex-1 items-center flex justify-end">
@@ -92,8 +126,19 @@ export default function Home() {
                                 <h1 className="tracking-wide text-2xl font-bold">Your activity : </h1>
                             </div>
                             {todos.length > 0 &&
-                                <div className="flex-0">
-                                    <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { setTodo([]) }}>Clear</button>
+                                <div className="flex-0 flex">
+                                    <div className="flex-1">
+                                        <select value={sort} onChange={(e)=>{setSort(e.target.value)}} className="py-2 mr-5 border-2 rounded-lg border-slate-300 px-3">
+                                            <option disabled>Sorting</option>
+                                            <option value={"a_z"}>Sort by Name A - Z</option>
+                                            <option value={"z_a"}>Sort by Name Z - A</option>
+                                            <option value={"l_h"}>Sort by Priority L - H</option>
+                                            <option value={"h_l"}>Sort by Priority H - L</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex-1">
+                                        <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { setTodo([]) }}>Clear</button>
+                                    </div>
                                 </div>
                             }
                         </div>
