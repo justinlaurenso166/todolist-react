@@ -10,7 +10,7 @@ export default function Home() {
     const [data, setData] = useState({ id: 0, activity: "", priority: 0, complete: false });
     const type = useRef("add");
     const editId = useRef(0);
-    const [sort, setSort] = useState("name");
+    const [sort, setSort] = useState("h_l");
 
     const clearData = () => {
         setActivity("")
@@ -24,9 +24,7 @@ export default function Home() {
         let new_data = { id: todos.length + 1, activity: activity, priority: parseInt(priority), complete: false };
         setData(new_data)
         let copy = [...todos];
-        copy = [...copy, new_data].sort((a,b)=>{
-            return a.activity > b.activity ? 1 : -1
-        })
+        copy = [...copy, new_data];
         setTodo(copy);
         clearData()
     }
