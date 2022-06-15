@@ -7,7 +7,9 @@ export default function Header() {
         <div>
             <header className="bg-blue-500 px-12 py-8">
                 <nav className="flex items-center justify-between">
-                    <div className="text-white text-2xl font-bold tracking-wider">Simple To Do List React</div>
+                    <Link to={"/"}>
+                        <div className="text-white text-2xl font-bold tracking-wider">Simple To Do List React</div>
+                    </Link>
                     <div className="flex gap-10 text-white font-semibold tracking-wide text-lg">
                         <span>By Justin Laurenso</span>
                     </div>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header"
 import noData from "./../assets/img/no_data.svg"
+import Modal from "react-modal"
 
 export default function Home() {
     const [todos, setTodo] = useState([]);
@@ -10,7 +11,8 @@ export default function Home() {
     const [data, setData] = useState({ id: 0, activity: "", priority: 0, complete: false });
     const type = useRef("add");
     const editId = useRef(0);
-    const [sort, setSort] = useState("h_l");
+    const [sort, setSort] = useState("a_z");
+    const [isOpen, setIsOpen] = useState(false);
 
     const clearData = () => {
         setActivity("")
@@ -60,36 +62,40 @@ export default function Home() {
         clearData()
     }
 
-    const sortData = ()=>{
-        if(sort === "a_z"){
-            let copy = [...todos].sort((a,b)=>{
+    const sortData = () => {
+        if (sort === "a_z") {
+            let copy = [...todos].sort((a, b) => {
                 return a.activity > b.activity ? 1 : -1
             })
             setTodo(copy);
         }
-        else if(sort === "z_a"){
-            let copy = [...todos].sort((a,b)=>{
+        else if (sort === "z_a") {
+            let copy = [...todos].sort((a, b) => {
                 return a.activity < b.activity ? 1 : -1
             })
             setTodo(copy);
         }
-        else if(sort === "l_h"){
-            let copy = [...todos].sort((a,b)=>{
+        else if (sort === "l_h") {
+            let copy = [...todos].sort((a, b) => {
                 return a.priority > b.priority ? 1 : -1
             })
             setTodo(copy);
         }
-        else if(sort === "h_l"){
-            let copy = [...todos].sort((a,b)=>{
+        else if (sort === "h_l") {
+            let copy = [...todos].sort((a, b) => {
                 return a.priority < b.priority ? 1 : -1
             })
             setTodo(copy);
         }
     }
 
-    useEffect(()=>{
+    const toggleModal = () => {
+        setIsOpen(!isOpen);
+    }
+
+    useEffect(() => {
         sortData();
-    },[sort])
+    }, [sort])
 
 
     return (
@@ -126,7 +132,7 @@ export default function Home() {
                             {todos.length > 0 &&
                                 <div className="flex-0 flex">
                                     <div className="flex-1">
-                                        <select value={sort} onChange={(e)=>{setSort(e.target.value)}} className="py-2 mr-5 border-2 rounded-lg border-slate-300 px-3">
+                                        <select value={sort} onChange={(e) => { setSort(e.target.value) }} className="py-2 mr-5 border-2 rounded-lg border-slate-300 px-3">
                                             <option disabled>Sorting</option>
                                             <option value={"a_z"}>Sort by Name A - Z</option>
                                             <option value={"z_a"}>Sort by Name Z - A</option>
@@ -135,7 +141,7 @@ export default function Home() {
                                         </select>
                                     </div>
                                     <div className="flex-1">
-                                        <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { setTodo([]) }}>Clear</button>
+                                        <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { toggleModal() }}>Clear</button>
                                     </div>
                                 </div>
                             }
@@ -185,6 +191,32 @@ export default function Home() {
                     </div>
                 </div>
             </main>
+            
+            {/* untuk menampilkan modal */}
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={toggleModal}
+                contentLabel="ClearAll"
+                className="mymodal"
+                overlayClassName="myoverlay"
+                closeTimeoutMS={500}
+            >
+                <div className="w-96">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold">Are you sure want to clear all activity ?</h2>
+                        <p className="mt-3 text-md">This action cannot be undone.</p>
+                        <div className="flex mt-8 gap-8 text-lg">
+                            <div className="flex-1">
+                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={()=>{toggleModal()}}>Cancel</button>
+                            </div>
+                            <div className="flex-1">
+                                <button className="w-full bg-blue-500 rounded-md text-white py-1" onClick={()=>{setTodo([]), setIsOpen(false)}}>Yes, I'm sure</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            {/*  */}
         </div>
     )
 }
