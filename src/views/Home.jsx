@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header"
 import noData from "./../assets/img/no_data.svg"
@@ -11,7 +10,7 @@ export default function Home() {
     const [data, setData] = useState({ id: 0, activity: "", priority: 0, complete: false });
     const type = useRef("add");
     const editId = useRef(0);
-    const [sort, setSort] = useState("a_z");
+    const [sort, setSort] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
     const clearData = () => {
@@ -71,7 +70,7 @@ export default function Home() {
         }
         else if (sort === "z_a") {
             let copy = [...todos].sort((a, b) => {
-                return a.activity < b.activity ? 1 : -1
+                return a.activity < b.activity ? -1 : -1
             })
             setTodo(copy);
         }
@@ -83,7 +82,7 @@ export default function Home() {
         }
         else if (sort === "h_l") {
             let copy = [...todos].sort((a, b) => {
-                return a.priority < b.priority ? 1 : -1
+                return a.priority < b.priority ? -1 : 1
             })
             setTodo(copy);
         }
@@ -133,7 +132,7 @@ export default function Home() {
                                 <div className="flex-0 flex">
                                     <div className="flex-1">
                                         <select value={sort} onChange={(e) => { setSort(e.target.value) }} className="py-2 mr-5 border-2 rounded-lg border-slate-300 px-3">
-                                            <option disabled>Sorting</option>
+                                            <option defaultChecked value={""}>Sorting</option>
                                             <option value={"a_z"}>Sort by Name A - Z</option>
                                             <option value={"z_a"}>Sort by Name Z - A</option>
                                             <option value={"l_h"}>Sort by Priority L - H</option>
