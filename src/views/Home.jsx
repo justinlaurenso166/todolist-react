@@ -72,7 +72,7 @@ export default function Home() {
         }
         else if (sort === "z_a") {
             let copy = [...todos].sort((a, b) => {
-                return a.activity < b.activity ? -1 : -1
+                return a.activity < b.activity ? 1 : -1
             })
             setTodo(copy);
         }
@@ -84,7 +84,7 @@ export default function Home() {
         }
         else if (sort === "h_l") {
             let copy = [...todos].sort((a, b) => {
-                return a.priority < b.priority ? -1 : 1
+                return a.priority < b.priority ? 1 : -1
             })
             setTodo(copy);
         }
@@ -192,7 +192,7 @@ export default function Home() {
                     </div>
                 </div>
             </main>
-            
+
             {/* untuk menampilkan modal */}
             <Modal
                 isOpen={isOpen}
@@ -208,10 +208,10 @@ export default function Home() {
                         <p className="mt-3 text-md">This action cannot be undone.</p>
                         <div className="flex mt-8 gap-8 text-lg">
                             <div className="flex-1">
-                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={()=>{toggleModal()}}>Cancel</button>
+                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={() => { toggleModal() }}>Cancel</button>
                             </div>
                             <div className="flex-1">
-                                <button className="w-full bg-blue-500 rounded-md text-white py-1" onClick={()=>{setTodo([]), setIsOpen(false)}}>Yes, I'm sure</button>
+                                <button className="w-full bg-blue-500 rounded-md text-white py-1" onClick={() => { setTodo([]), setIsOpen(false) }}>Yes, I'm sure</button>
                             </div>
                         </div>
                     </div>
