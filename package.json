@@ -1,7 +1,6 @@
 {
     "name": "vuevite",
     "private": true,
-    "homepage": "https://justinlaurenso166.github.io/todolist-react",
     "version": "0.0.0",
     "scripts": {
         "dev": "npm run watch:css && vite",
