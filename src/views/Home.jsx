@@ -3,6 +3,8 @@ import Header from "../components/Header"
 import noData from "./../assets/img/no_data.svg"
 import Modal from "react-modal"
 
+Modal.setAppElement("#root");
+
 export default function Home() {
     const [todos, setTodo] = useState([]);
     const [activity, setActivity] = useState("");
@@ -101,19 +103,19 @@ export default function Home() {
         <div className="bg-slate-100 h-screen overflow-y-auto">
             <div className="header"><Header /></div>
             <main>
-                <div className="w-4/5 m-auto my-10">
+                <div className="lg:w-4/5 w-[95%] m-auto my-10">
                     <form onSubmit={type.current === 'add' ? addTodo : editTodo}>
-                        <div className="flex gap-10 px-6 py-1">
+                        <div className="flex gap-10 px-6 py-1 flex-col lg:flex-row">
                             <div className="flex-1 flex gap-10 items-center">
                                 <div className="flex-1 w-full">
                                     <input type="text" name="todo" id="todo" placeholder="Input your activity" className="w-full py-2 px-3 border-2 border-gray-400 rounded-lg" value={activity} onChange={(event) => { setActivity(event.target.value) }} required />
                                 </div>
-                                <div className="flex-0 w-48">
+                                <div className="flex-0 lg:w-48">
                                     <input type={"submit"} className="w-full bg-blue-500 hover:bg-blue-600 hover:cursor-pointer py-2 px-3 rounded-lg text-white" value={type.current === "add" ? "Create" : "Save Changes"} />
                                 </div>
                             </div>
                             <div className="flex-1 items-center flex justify-end">
-                                <label htmlFor="priority">Choose activity priority : </label>
+                                <label htmlFor="priority" className="text-sm lg:text-lg">Choose activity priority : </label>
                                 <select name="priority" id="priority" className="ml-5 border-2 border-gray-400 rounded-lg py-1 px-3" onChange={(e) => { setPriority(e.target.value) }} value={priority}>
                                     <option disabled value={"-"}>Choose priority</option>
                                     <option value={"2"}>High</option>
@@ -124,12 +126,12 @@ export default function Home() {
                         </div>
                     </form>
                     <div className="mt-10 px-3">
-                        <div className="flex items-center">
+                        <div className="flex items-center lg:flex-row flex-col">
                             <div className="flex-1">
                                 <h1 className="tracking-wide text-2xl font-bold">Your activity : </h1>
                             </div>
                             {todos.length > 0 &&
-                                <div className="flex-0 flex">
+                                <div className="flex-0 flex lg:mt-0 mt-5">
                                     <div className="flex-1">
                                         <select value={sort} onChange={(e) => { setSort(e.target.value) }} className="py-2 mr-5 border-2 rounded-lg border-slate-300 px-3">
                                             <option defaultChecked value={""}>Sorting</option>
@@ -152,11 +154,11 @@ export default function Home() {
 
                                     return (
                                         <div key={td.id} className="mt-5 bg-white shadow-lg shadow-slate-300 rounded-lg py-5 px-7 text-lg">
-                                            <div className="flex items-center">
+                                            <div className="flex items-center lg:flex-row flex-col">
                                                 <div className="flex-1">
                                                     <span className={td.complete ? "line-through" : ""}>{td.activity}</span>
                                                 </div>
-                                                <div className="flex-1 flex items-center text-center gap-6">
+                                                <div className="flex-1 flex flex-col lg:flex-row lg:mt-0 mt-4 items-center text-center gap-6">
                                                     <div className="flex-1">
                                                         <button className="bg-green-700 hover:bg-green-600 text-white px-2 w-full py-1.5 rounded-lg" onClick={() => { completeTodo(td.id) }}>{td.complete ? "Cancel" : "Complete"}</button>
                                                     </div>
@@ -182,7 +184,7 @@ export default function Home() {
                             }
                             {todos.length === 0 &&
                                 <div className="text-center mt-10 w-full py-5">
-                                    <img src={noData} alt="no_data" className="w-80 m-auto" />
+                                    <img src={noData} alt="no_data" className="w-2/3 lg:w-80 m-auto" />
                                     <p className="mt-10 text-xl">There is no activity right now.</p>
                                 </div>
                             }
