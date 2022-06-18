@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header"
 import noData from "./../assets/img/no_data.svg"
 import Modal from "react-modal"
+import ObjectId from "bson-objectid"
+import Footer from "../components/Footer"
 
 Modal.setAppElement("#root");
 
@@ -14,6 +16,8 @@ export default function Home() {
     const editId = useRef(0);
     const [sort, setSort] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
+    const deleteId = useRef("");
 
     const clearData = () => {
         setActivity("")
@@ -24,11 +28,12 @@ export default function Home() {
 
     const addTodo = (e) => {
         e.preventDefault()
-        let new_data = { id: todos.length + 1, activity: activity, priority: parseInt(priority), complete: false };
+        let new_data = { id: ObjectId().toHexString(), activity: activity, priority: parseInt(priority), complete: false };
         setData(new_data)
         let copy = [...todos];
         copy = [...copy, new_data];
         setTodo(copy);
+        console.log(copy)
         clearData()
     }
 
@@ -90,8 +95,12 @@ export default function Home() {
         }
     }
 
-    const toggleModal = () => {
-        setIsOpen(!isOpen);
+    const toggleModal = (type) => {
+        if(type === "clear"){
+            setIsOpen(!isOpen);
+        }else{
+            setIsDelete(!isDelete)
+        }
     }
 
     useEffect(() => {
@@ -100,9 +109,9 @@ export default function Home() {
 
 
     return (
-        <div className="bg-slate-100 h-screen overflow-y-auto">
+        <div className="bg-slate-100 h-screen overflow-y-auto flex flex-col">
             <div className="header"><Header /></div>
-            <main>
+            <main className="flex-1">
                 <div className="lg:w-4/5 w-[95%] m-auto my-10">
                     <form onSubmit={type.current === 'add' ? addTodo : editTodo}>
                         <div className="flex gap-10 px-6 py-1 flex-col lg:flex-row">
@@ -142,7 +151,7 @@ export default function Home() {
                                         </select>
                                     </div>
                                     <div className="flex-1">
-                                        <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { toggleModal() }}>Clear</button>
+                                        <button className="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-600" onClick={() => { toggleModal("clear") }}>Clear</button>
                                     </div>
                                 </div>
                             }
@@ -166,7 +175,7 @@ export default function Home() {
                                                         <button className="bg-yellow-600 hover:bg-yellow-500 text-white px-2 w-full py-1.5 rounded-lg" onClick={() => { setActivity(td.activity), setPriority(td.priority), type.current = "edit", editId.current = td.id, document.getElementById("todo").focus() }}>Update</button>
                                                     </div>
                                                     <div className="flex-1">
-                                                        <button className="bg-red-700 hover:bg-red-600 text-white px-2 w-full py-1.5 rounded-lg" onClick={() => { deleteTodo(td.id) }}>Delete</button>
+                                                        <button className="bg-red-700 hover:bg-red-600 text-white px-2 w-full py-1.5 rounded-lg" onClick={() => { toggleModal("delete"), deleteId.current = td.id }}>Delete</button>
                                                     </div>
                                                     <div className="flex-1 flex items-center justify-center">
                                                         <div className={`w-4 h-4 rounded-full ${priority_color}`}></div>
@@ -183,7 +192,7 @@ export default function Home() {
                                 })
                             }
                             {todos.length === 0 &&
-                                <div className="text-center mt-10 w-full py-5">
+                                <div className="text-center mt-10 lg:mt-20 w-full py-5">
                                     <img src={noData} alt="no_data" className="w-2/3 lg:w-80 m-auto" />
                                     <p className="mt-10 text-xl">There is no activity right now.</p>
                                 </div>
@@ -192,8 +201,37 @@ export default function Home() {
                     </div>
                 </div>
             </main>
+            <footer className="static bottom-0">
+                <Footer />
+            </footer>
+            {/* untuk menampilkan modal delete activity*/}
+            <Modal
+                isOpen={isDelete}
+                onRequestClose={toggleModal}
+                contentLabel="ClearAll"
+                className="mymodal"
+                overlayClassName="myoverlay"
+                closeTimeoutMS={500}
+            >
+                <div className="w-96">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold">Are you sure want to this activity ?</h2>
+                        <p className="mt-3 text-md">This action cannot be undone.</p>
+                        <div className="flex mt-8 gap-8 text-lg">
+                            <div className="flex-1">
+                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={() => { toggleModal("delete") }}>Cancel</button>
+                            </div>
+                            <div className="flex-1">
+                                <button className="w-full bg-blue-500 rounded-md text-white py-1" onClick={() => { deleteTodo(deleteId.current), setIsDelete(false) }}>Yes, I'm sure</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            {/*  */}
 
-            {/* untuk menampilkan modal */}
+
+            {/* untuk menampilkan modal clear activity */}
             <Modal
                 isOpen={isOpen}
                 onRequestClose={toggleModal}
@@ -208,7 +246,7 @@ export default function Home() {
                         <p className="mt-3 text-md">This action cannot be undone.</p>
                         <div className="flex mt-8 gap-8 text-lg">
                             <div className="flex-1">
-                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={() => { toggleModal() }}>Cancel</button>
+                                <button className="w-full bg-red-500 rounded-md text-white py-1" onClick={() => { toggleModal("clear") }}>Cancel</button>
                             </div>
                             <div className="flex-1">
                                 <button className="w-full bg-blue-500 rounded-md text-white py-1" onClick={() => { setTodo([]), setIsOpen(false) }}>Yes, I'm sure</button>
