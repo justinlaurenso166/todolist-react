@@ -162,7 +162,7 @@ export default function Home() {
                                     const priority_color = td.priority === 1 ? "bg-yellow-500" : (td.priority === 2 ? "bg-red-500" : "bg-green-500")
 
                                     return (
-                                        <div key={td.id} className="mt-5 bg-white shadow-lg shadow-slate-300 rounded-lg py-5 px-7 text-lg">
+                                        <div key={td.id} className={`mt-5 shadow-lg shadow-slate-300 rounded-lg py-5 px-7 text-lg ${td.complete === true ? "bg-gray-200" : "bg-white"}`}>
                                             <div className="flex items-center lg:flex-row flex-col">
                                                 <div className="flex-1">
                                                     <span className={td.complete ? "line-through" : ""}>{td.activity}</span>
