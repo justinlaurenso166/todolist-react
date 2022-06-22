@@ -8,6 +8,7 @@ import Footer from "../components/Footer"
 Modal.setAppElement("#root");
 
 export default function Home() {
+    //state
     const [todos, setTodo] = useState([]);
     const [activity, setActivity] = useState("");
     const [priority, setPriority] = useState(0);
@@ -19,6 +20,7 @@ export default function Home() {
     const [isDelete, setIsDelete] = useState(false);
     const deleteId = useRef("");
 
+    //function untuk clear data setelah memasukkan activity
     const clearData = () => {
         setActivity("")
         setPriority(0)
@@ -26,18 +28,30 @@ export default function Home() {
         setSort("name")
     }
 
+    //function untuk menambahkan activity
     const addTodo = (e) => {
         e.preventDefault()
+
+        //membuat variable new_data dan menampung data yang diinput oleh user
         let new_data = { id: ObjectId().toHexString(), activity: activity, priority: parseInt(priority), complete: false };
+        
+        //memasukan variable new_data ke variable data menggunakan setData
         setData(new_data)
+
+        //membuat variable copy yang berisi array dari todos
         let copy = [...todos];
+
+        //mengubah isi dari variable copy dan menambahkan data dari new_data ke dalam array
         copy = [...copy, new_data];
+
+        //memasukan array terbaru copy ke todos menggunakan setTodo
         setTodo(copy);
-        console.log(copy)
+        
         clearData()
     }
 
     const deleteTodo = (id) => {
+        //melakukan filtering berdasarkan id yang ingin di hapus
         const removeId = todos.filter((del) => del.id !== id);
         setTodo(removeId)
     }
@@ -68,6 +82,7 @@ export default function Home() {
         clearData()
     }
 
+    //function untuk melakukan sorting data
     const sortData = () => {
         if (sort === "a_z") {
             let copy = [...todos].sort((a, b) => {
@@ -95,6 +110,7 @@ export default function Home() {
         }
     }
 
+    //function untuk menampilkan modal berdasarkan tipenya
     const toggleModal = (type) => {
         if(type === "clear"){
             setIsOpen(!isOpen);
@@ -103,6 +119,7 @@ export default function Home() {
         }
     }
 
+    //mentrigger function berdasarkan perubahan array sort
     useEffect(() => {
         sortData();
     }, [sort])
@@ -159,6 +176,7 @@ export default function Home() {
                         <div className="text-black mt-5">
                             {todos.length > 0 &&
                                 todos.map((td) => {
+                                    //variable untuk menentukan warna sesuai priority
                                     const priority_color = td.priority === 1 ? "bg-yellow-500" : (td.priority === 2 ? "bg-red-500" : "bg-green-500")
 
                                     return (
